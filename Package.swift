@@ -21,7 +21,7 @@ let package = Package(
             name: "OggDecoderTests",
             dependencies: ["OggDecoder"],
             resources: [
-                .copy("Resources/")
+                .copy("TestResources/")
             ]),
         .binaryTarget(name: "ogg",
                       path: "ogg.xcframework"),
