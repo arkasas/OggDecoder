@@ -11,18 +11,35 @@
 
 @implementation OGGDecoder
 
-- (BOOL)decode:(NSString *)fileIn into:(NSString *)fileOut {
+- (BOOL)decode:(NSURL *)oggFile into:(NSURL *)outputFile {
     oggHelper helper;
-    const char *fileInChar = [fileIn cStringUsingEncoding:NSASCIIStringEncoding];
-    const char *fileOutChar = [fileOut cStringUsingEncoding:NSASCIIStringEncoding];
+    const char *fileInChar = [[oggFile path] cStringUsingEncoding:NSASCIIStringEncoding];
+    const char *fileOutChar = [[outputFile path] cStringUsingEncoding:NSASCIIStringEncoding];
 
     int output = helper.decode(fileInChar, fileOutChar);
     return output == 1;
 }
 
-- (void)decode:(NSString *)fileIn into:(NSString *)fileOut completion:(void (^ __nullable)(BOOL))completion {
+- (NSURL *)decode:(NSURL *)oggFile {
+    NSURL* output = [[[NSFileManager defaultManager] temporaryDirectory] URLByAppendingPathComponent:@"output.wav"];
+    if ([self decode:oggFile into:output] == TRUE) {
+        return output;
+    }
+    return nil;
+}
+
+- (void)decode:(NSURL *)oggFile completion:(void (^)(NSURL * _Nullable))completion {
     dispatch_async(dispatch_get_main_queue(), ^{
-        BOOL result = [self decode:fileIn into:fileOut];
+        NSURL* output = [self decode:oggFile];
+        dispatch_async(dispatch_get_main_queue(), ^(void){
+            completion(output);
+        });
+    });
+}
+
+- (void)decode:(NSURL *)oggFile into:(NSURL *)outputFile completion:(void (^)(BOOL))completion {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        BOOL result = [self decode:oggFile into:outputFile];
         dispatch_async(dispatch_get_main_queue(), ^(void){
             completion(result);
         });

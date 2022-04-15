@@ -13,8 +13,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface OGGDecoder : NSObject
--(BOOL)decode:(NSString*)fileIn into:(NSString*)fileOut;
--(void)decode:(NSString*)fileIn into:(NSString*)fileOut completion:(void (^_Nullable)(BOOL))completion;
+-(BOOL)decode:(NSURL*)oggFile into:(NSURL*)outputFile;
+-(void)decode:(NSURL*)oggFile into:(NSURL*)outputFile completion:(void (^)(BOOL))completion;
+-(nullable NSURL*)decode:(NSURL*)oggFile;
+-(void)decode:(NSURL*)oggFile completion:(void (^)(NSURL* _Nullable outputFile))completion;
 @end
 
 NS_ASSUME_NONNULL_END
