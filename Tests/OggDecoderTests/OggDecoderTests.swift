@@ -29,19 +29,21 @@ final class OggDecoderTests: XCTestCase {
         decoder = nil
         try? FileManager.default.removeItem(at: wavAudioUrl)
         wavAudioUrl = nil
+        
+        super.tearDown()
     }
 
-    func test_decodeOgaAudioToWavAudio_shouldReturnTrue() throws {
+    func test_whenDecodeOgaAudio_thenReturnTrue() throws {
         let ogaAudioUrl = try fetchFileUrlFromTestBundle(filename: "TestResources/Chopin_-_Polonaise_Op._53", ext: "oga")
         XCTAssertTrue(decoder.decode(ogaAudioUrl, into: wavAudioUrl))
     }
 
-    func test_decodeOggAudioToWavAudio_shouldReturnTrue() throws {
+    func test_whenDecodeOggAudio_thenReturnTrue() throws {
         let oggAudioUrl = try fetchFileUrlFromTestBundle(filename: "TestResources/Chopin-polonaise-in-a-military", ext: "ogg")
         XCTAssertTrue(decoder.decode(oggAudioUrl, into: wavAudioUrl))
     }
 
-    func test_decodeOggAudioToWavAudio_supportingAsynchronous_shouldReturnTrue() throws {
+    func test_whenDecodeOggAudio_supportingAsynchronous_thenReturnTrue() throws {
         let oggAudioUrl = try fetchFileUrlFromTestBundle(filename: "TestResources/Chopin-polonaise-in-a-military", ext: "ogg")
         let decodingExpectation = expectation(description: "Decoded")
         decoder.decode(oggAudioUrl, into: wavAudioUrl) { result in
@@ -52,7 +54,7 @@ final class OggDecoderTests: XCTestCase {
         waitForExpectations(timeout: 5.0, handler: nil)
     }
 
-    func test_decodeOgaAudioToWavAudio_supportingAsynchronous_shouldReturnTrue() throws {
+    func test_whenDecodeOgaAudio_supportingAsynchronous_thenReturnTrue() throws {
         let oggAudioUrl = try fetchFileUrlFromTestBundle(filename: "TestResources/Chopin_-_Polonaise_Op._53", ext: "oga")
         let decodingExpectation = expectation(description: "Decoded")
         decoder.decode(oggAudioUrl, into: wavAudioUrl) { result in
@@ -63,15 +65,15 @@ final class OggDecoderTests: XCTestCase {
         waitForExpectations(timeout: 5.0, handler: nil)
     }
     
-    func test_decodeOggAudioToWav_expectReturnFileUrl() throws {
+    func test_whenDecodeOgaAudio_thenReturnFileUrl() throws {
         let oggAudioUrl = try fetchFileUrlFromTestBundle(filename: "TestResources/Chopin_-_Polonaise_Op._53", ext: "oga")
         XCTAssertNotNil(decoder.decode(oggAudioUrl))
     }
     
-    func test_decodeOggAudioToWav_supportingAsynchronous_expectReturnFileUrl() throws {
+    func test_whenDecodeOggAudio_supportingAsynchronous_thenReturnFileUrl() throws {
         let oggAudioUrl = try fetchFileUrlFromTestBundle(filename: "TestResources/Chopin_-_Polonaise_Op._53", ext: "oga")
         let decodingExpectation = expectation(description: "Decoded")
-        decoder.decode( oggAudioUrl) { result in
+        decoder.decode(oggAudioUrl) { result in
             XCTAssertNotNil(result)
             decodingExpectation.fulfill()
         }
