@@ -80,6 +80,39 @@ final class OggDecoderTests: XCTestCase {
 
         waitForExpectations(timeout: 5.0, handler: nil)
     }
+    
+    func test_decode_simulatingMultipleFiles() throws {
+        let numberOfFiles = 100
+        let oggAudioUrl = try fetchFileUrlFromTestBundle(filename: "TestResources/Chopin-polonaise-in-a-military", ext: "ogg")
+        let arrayOfFiles = Array(repeating: oggAudioUrl, count: numberOfFiles)
+        let outputFiles = try (0..<numberOfFiles).map {
+            try FileManager.default.url(
+                for: .documentDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: false)
+                .appendingPathComponent("out\($0).wav")
+        }
+        
+        guard arrayOfFiles.count == outputFiles.count else {
+            XCTFail("Range of input files is different than range of output files")
+            return
+        }
+        
+        let decodingExpectation = expectation(description: "Decoded")
+        decodingExpectation.expectedFulfillmentCount = numberOfFiles
+        
+        var num = 0
+        arrayOfFiles.enumerated().forEach {
+            decoder.decode($0.element, into: outputFiles[$0.offset]) { result in
+                print("test_decode_simulatingMultipleFiles = \(num)|\(result)")
+                num += 1
+                decodingExpectation.fulfill()
+            }
+        }
+        
+        waitForExpectations(timeout: 60)
+    }
 
     
     private func fetchFileUrlFromTestBundle(filename: String, ext: String) throws -> URL {
