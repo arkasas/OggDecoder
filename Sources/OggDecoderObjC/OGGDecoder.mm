@@ -14,8 +14,8 @@ dispatch_queue_t _decodeQueue = dispatch_queue_create("com.oggDecoder.decodingQu
 
 - (BOOL)decode:(NSURL *)oggFile into:(NSURL *)outputFile {
     oggHelper helper;
-    const char *fileInChar = [[oggFile path] cStringUsingEncoding:NSASCIIStringEncoding];
-    const char *fileOutChar = [[outputFile path] cStringUsingEncoding:NSASCIIStringEncoding];
+    const char *fileInChar = [[oggFile path] cStringUsingEncoding:NSUTF8StringEncoding];
+    const char *fileOutChar = [[outputFile path] cStringUsingEncoding:NSUTF8StringEncoding];
 
     int output = helper.decode(fileInChar, fileOutChar);
     return output == 1;
